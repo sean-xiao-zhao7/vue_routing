@@ -16,17 +16,37 @@
 import UserItem from '../users/UserItem.vue';
 
 export default {
+  inject: ['users', 'teams'],
+  props: ['id'],
   components: {
-    UserItem
+    UserItem,
   },
   data() {
     return {
-      teamName: 'Test',
-      members: [
-        { id: 'u1', fullName: 'Max Schwarz', role: 'Engineer' },
-        { id: 'u2', fullName: 'Max Schwarz', role: 'Engineer' },
-      ],
+      teamName: '',
+      members: [],
     };
+  },
+  created() {
+    this.load(this.id);
+  },
+  watch: {
+    id(newId) {
+      this.load(newId);
+    },
+  },
+  methods: {
+    load(id) {
+      const team = this.teams.find((t) => t.id === id);
+      const members = team.members;
+      const filteredMembers = [];
+      for (const mid of members) {
+        const user = this.users.find((u) => u.id === mid);
+        filteredMembers.push(user);
+      }
+      this.members = filteredMembers;
+      this.teamName = team.teamName;
+    },
   },
 };
 </script>
@@ -37,7 +57,7 @@ section {
   max-width: 40rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   padding: 1rem;
-  border-radius: 12px;
+  border-radius: 5px;
 }
 
 h2 {
