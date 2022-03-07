@@ -11,7 +11,10 @@ export default {
   props: ['name', 'memberCount', 'id'],
   computed: {
     linkV() {
-      return '/teams/' + this.id;
+      return {
+        name: 'team-members',
+        params: { id: this.id },
+      };
     },
   },
 };
